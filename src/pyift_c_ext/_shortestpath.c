@@ -4,6 +4,7 @@
 #include "heap.h"
 
 #include <float.h>
+#include <limits.h>
 
 
 static inline double square(double x) {
@@ -22,6 +23,11 @@ PyObject *_seedCompetitionGrid(PyArrayObject *_image, PyArrayObject *_seeds)
     image = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _image, NPY_DOUBLE, NPY_ARRAY_CARRAY_RO);
     seeds = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _seeds, NPY_LONG, NPY_ARRAY_CARRAY_RO);
     if (!image || !seeds) goto err1;
+
+    if (PyArray_SIZE(image) > INT_MAX) {
+        PyErr_SetString(PyExc_ValueError, "`image` is too large.");
+        goto err1;
+    }
 
     Coord shape;
     Adjacency *adj = NULL;
@@ -154,6 +160,11 @@ PyObject *_seedCompetitionGraph(PyArrayObject *_weights, PyArrayObject *_indices
         return NULL;
     }
 
+    if (PyArray_DIM(_seeds, 0) > INT_MAX) {
+        PyErr_SetString(PyExc_ValueError, "`seeds` is too large.");
+        return NULL;
+    }
+
     PyArrayObject *weights = NULL, *indices = NULL, *indptr = NULL, *seeds = NULL;
     weights = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _weights, NPY_DOUBLE, NPY_ARRAY_CARRAY_RO);
     indices = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _indices, NPY_LONG, NPY_ARRAY_CARRAY_RO);
@@ -265,6 +276,11 @@ PyObject *_dynamicArcWeightGridRoot(PyArrayObject *_image, PyArrayObject *_seeds
     image = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _image, NPY_DOUBLE, NPY_ARRAY_CARRAY_RO);
     seeds = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _seeds, NPY_LONG, NPY_ARRAY_CARRAY_RO);
     if (!image || !seeds) goto err1;
+
+    if (PyArray_SIZE(image) > INT_MAX) {
+        PyErr_SetString(PyExc_ValueError, "`image` is too large.");
+        goto err1;
+    }
 
     Coord shape;
     Adjacency *adj = NULL;
@@ -432,6 +448,11 @@ PyObject *_dynamicArcWeightGridLabel(PyArrayObject *_image, PyArrayObject *_seed
     image = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _image, NPY_DOUBLE, NPY_ARRAY_CARRAY_RO);
     seeds = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _seeds, NPY_LONG, NPY_ARRAY_CARRAY_RO);
     if (!image || !seeds) goto err1;
+
+    if (PyArray_SIZE(image) > INT_MAX) {
+        PyErr_SetString(PyExc_ValueError, "`image` is too large.");
+        goto err1;
+    }
 
     Coord shape;
     Adjacency *adj = NULL;
@@ -605,6 +626,11 @@ PyObject *_dynamicArcWeightGridExpDecay(PyArrayObject *_image, PyArrayObject *_s
     seeds = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _seeds, NPY_LONG, NPY_ARRAY_CARRAY_RO);
     if (!image || !seeds) goto err1;
 
+    if (PyArray_SIZE(image) > INT_MAX) {
+        PyErr_SetString(PyExc_ValueError, "`image` is too large.");
+        goto err1;
+    }
+
     Coord shape;
     Adjacency *adj = NULL;
     int d = -1;
@@ -753,6 +779,11 @@ PyObject *_euclideanDistanceTransformGrid(PyArrayObject *_mask, PyArrayObject *_
     scales = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _scales, NPY_DOUBLE, NPY_ARRAY_CARRAY_RO);
     if (!mask || !scales) goto err1;
 
+    if (PyArray_SIZE(mask) > INT_MAX) {
+        PyErr_SetString(PyExc_ValueError, "`mask` is too large.");
+        goto err1;
+    }
+
     Coord shape;
     Adjacency *adj = NULL;
     if (PyArray_NDIM(mask) == 2) {
@@ -895,6 +926,11 @@ PyObject *_watershedFromMinimaGrid(PyArrayObject *_image, PyArrayObject *_mask, 
     mask = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _mask, NPY_BOOL, NPY_ARRAY_CARRAY_RO);
     scales = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _scales, NPY_DOUBLE, NPY_ARRAY_CARRAY_RO);
     if (!image || !mask || !H_minima || !scales) goto err1;
+
+    if (PyArray_SIZE(image) > INT_MAX) {
+        PyErr_SetString(PyExc_ValueError, "`image` is too large.");
+        goto err1;
+    }
 
     Coord shape;
     Adjacency *adj = NULL;
@@ -1040,6 +1076,11 @@ PyObject *_orientedSeedCompetitionGrid(PyArrayObject *_image, PyArrayObject *_se
     seeds = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _seeds, NPY_LONG, NPY_ARRAY_CARRAY_RO);
     mask = (PyArrayObject*) PyArray_FROM_OTF((PyObject*) _mask, NPY_BOOL, NPY_ARRAY_CARRAY_RO);
     if (!image || !seeds || !mask) goto err1;
+
+    if (PyArray_SIZE(image) > INT_MAX) {
+        PyErr_SetString(PyExc_ValueError, "`image` is too large.");
+        goto err1;
+    }
 
     Coord shape;
     Adjacency *adj = NULL;

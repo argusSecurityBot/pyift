@@ -5,6 +5,7 @@
 #include "set.h"
 
 #include <float.h>
+#include <limits.h>
 
 #ifndef M_SQRT2
     #define M_SQRT2 1.41421356237309504880
@@ -44,6 +45,11 @@ PyObject *_livewirePath(PyArrayObject *image, PyArrayObject *saliency, PyArrayOb
             return NULL;
         saliency_ptr = PyArray_DATA(saliency);
         sal_d = PyArray_DIM(saliency, 2);
+    }
+
+    if (PyArray_SIZE(image) > INT_MAX || (saliency && PyArray_SIZE(saliency) > INT_MAX)) {
+        PyErr_SetString(PyExc_ValueError, "`image` is too large.");
+        return NULL;
     }
 
     Coord shape = {.x = PyArray_DIM(image, 1),

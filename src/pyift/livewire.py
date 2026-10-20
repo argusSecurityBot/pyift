@@ -187,6 +187,9 @@ class LiveWire:
         if not isinstance(position, int):
             raise TypeError('`position` must be a integer, tuple or list.')
 
+        if not (0 <= position < self.size[0] * self.size[1] or position == self.source == -1):
+            raise ValueError('Index out of image boundary, {}'.format(self.size))
+
         if self.source != -1:
             self.cancel()
             self.current = self._opt_path(self.source, position)
